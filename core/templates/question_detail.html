@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ question.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'view_questions' %}">Questions</a>
+        <a href="{% url 'post_question' %}">Ask</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+
+    <div class="container">
+        <h2>{{ question.title }}</h2>
+        <p>{{ question.body }}</p>
+        <p><small>Asked by {{ question.author.username }} on {{ question.created_at }}</small></p>
+
+        <hr>
+        <p><small>Asked by {{ question.author.username }} on {{ question.created_at }}</small></p>
+
+<!-- Admin Response Section -->
+{% if question.admin_response %}
+    <div class="admin-response">
+        <strong>Admin Response:</strong>
+        <p>{{ question.admin_response }}</p>
+    </div>
+{% endif %}
+
+{% if user.is_staff %}
+    <a class="btn react-btn" href="{% url 'react_to_question' question.id %}">💬 React</a>
+{% endif %}
+
+
+        <h3>💬 Answers</h3>
+        {% if answers %}    
+            {% for answer in answers %}
+                <div class="answer-box">
+                    <p>{{ answer.body }}</p>
+                    <small>By {{ answer.author.username }} on {{ answer.created_at }}</small>
+                    <form method="post" action="{% url 'like_answer' answer.id %}">
+                        {% csrf_token %}
+                        <button class="btn" type="submit" style="margin-top: 8px;">
+                            {% if user in answer.liked_by.all %}
+                                ❤️ Unlike
+                            {% else %}
+                                🤍 Like
+                            {% endif %}
+                            ({{ answer.like_count }})
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No answers yet. Be the first to answer!</p>
+        {% endif %}
+
+        <hr>
+
+        <h3>✍️ Write an Answer</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn" type="submit">Submit Answer</button>
+        </form>
+
+        <br>
+        <a class="btn back-btn" href="{% url 'view_questions' %}">← Back to All Questions</a>
+    </div>
+</body>
+</html>

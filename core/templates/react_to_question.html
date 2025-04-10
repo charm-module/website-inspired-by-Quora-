@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Response</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .emoji-picker {
+            margin: 10px 0;
+        }
+        .emoji-picker button {
+            font-size: 24px;
+            padding: 6px 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+        .emoji-picker button:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Admin Respond to: "{{ question.title }}"</h2>
+        <p><strong>Question:</strong> {{ question.body }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <label for="admin_response">Your Response:</label><br>
+            <textarea id="admin_response" name="admin_response" rows="5" cols="60" placeholder="Write your response here..." required>{{ question.admin_response }}</textarea><br><br>
+
+            <div class="emoji-picker">
+                <span>React with: </span>
+                <button type="button" onclick="addEmoji('👍')">👍</button>
+                <button type="button" onclick="addEmoji('😄')">😄</button>
+                <button type="button" onclick="addEmoji('😢')">😢</button>
+                <button type="button" onclick="addEmoji('🔥')">🔥</button>
+                <button type="button" onclick="addEmoji('🎉')">🎉</button>
+            </div>
+
+            <button class="btn" type="submit">💬 Submit Response</button>
+        </form>
+    </div>
+
+    <script>
+        function addEmoji(emoji) {
+            const textarea = document.getElementById('admin_response');
+            textarea.value += emoji;
+            textarea.focus();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!-- templates/confirm_delete.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Confirm Delete</h2>
+  <p>Are you sure you want to delete the question: <strong>{{ question.title }}</strong>?</p>
+  
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'view_questions' %}">Cancel</a>
+  </form>
+{% endblock %}
